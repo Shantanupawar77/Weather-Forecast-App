@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 400px;
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.search-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+}
+
+button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    color: #fff;
+    cursor: pointer;
+    outline: none;
+}
+
+.weather-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.weather-details {
+    text-align: center;
+}
+
+.temperature {
+    margin-top: 20px;
+}
+
+.temperature p {
+    margin: 5px 0;
+}
+
+.temperature span {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.temperature sup {
+    font-size: 18px;
+}
+
+.date-time {
+    text-align: center;
+}
+
+#temp_status {
+    font-size: 20px;
+    font-weight: bold;
+}
+/* Your existing CSS styles */
+
+.temperature {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.temperature p {
+    margin: 5px 0;
+}
+
+.temperature span {
+    font-size: 36px;
+    font-weight: bold;
+    color: #007bff; /* Blue color for temperature */
+}
+
+.temperature sup {
+    font-size: 18px;
+}
+
+#temp_status {
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: capitalize; /* Capitalize weather status */
+}
+
+#city_name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #333; /* Darker color for city name */
+}
+@media screen and (max-width: 600px) {
+            .container {
+                max-width: 90%;
+            }
+
+            .search-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            input[type="text"] {
+                flex: none;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            button[type="submit"] {
+                flex: none;
+                width: 100%;
+            }
+
+            .weather-info {
+                flex-direction: column;
+            }
+
+            .weather-details,
+            .date-time {
+                text-align: center;
+                margin-top: 20px;
+            }
+
+            #city_name {
+                font-size: 20px;
+                margin-bottom: 5px;
+            }
+
+            .temperature p {
+                margin: 2px 0;
+            }
+
+            .temperature span {
+                font-size: 28px;
+            }
+
+            .temperature sup {
+                font-size: 14px;
+            }
+
+            #temp_status {
+                font-size: 16px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Weather Forecast</h1>
+        <form class="search-form">
+            <input type="text" id="cityName" placeholder="Enter city name" autocomplete="off">
+            <button type="submit" id="submitBtn">Search</button>
+        </form>
+        <div class="weather-info">
+            <div class="weather-details">
+                <p id="city_name">City, Country</p>
+                <div class="temperature">
+                    <p id="temp"><span>0</span><sup>o</sup>C</p>
+                    <p id="temp_status">Weather Status</p>
+                </div>
+            </div>
+            <div class="date-time">
+                <p id="day">Day</p>
+                <p id="today_date">Date</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        const cityName = document.getElementById("cityName");
+        const submitBtn = document.getElementById("submitBtn");
+        const city_name = document.getElementById("city_name");
+        const temp = document.getElementById("temp");
+        const temp_status = document.getElementById("temp_status");
+        const dayElement = document.getElementById("day");
+        const dateElement = document.getElementById("today_date");
+
+        const getInfo = async (event) => {
+            event.preventDefault();
+            let cityval = cityName.value;
+            if (cityName.value === "") {
+                city_name.innerText = "Please enter a city name";
+                // Hide temperature elements when city name is not entered
+                temp.style.display = 'none';
+                temp_status.style.display = 'none';
+            } else {
+                try {
+                    let url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName.value}&appid=975c8d701e901d07eeec85d4f62f318b`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    const arrdata = [data];
+                    city_name.innerText = `${arrdata[0].name}, ${arrdata[0].sys.country}`;
+                    temp.innerHTML = `<p><span>${arrdata[0].main.temp} </span><sup>o</sup>C</p>`;
+                    temp_status.innerText = arrdata[0].weather[0].main;
+
+                    // Update day and date
+                    const currentDate = new Date();
+                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    const formattedDate = currentDate.toLocaleDateString('en-US', options);
+                    dayElement.innerText = formattedDate.split(',')[0];
+                    dateElement.innerText = formattedDate.split(',')[1].trim();
+
+                    // Show weather info after search
+                    document.querySelector('.weather-info').style.display = 'flex';
+                    // Show temperature elements when data is received
+                    temp.style.display = 'block';
+                    temp_status.style.display = 'block';
+
+                } catch {
+                    city_name.innerText = "City not found";
+                    // Hide temperature elements when city is not found
+                    temp.style.display = 'none';
+                    temp_status.style.display = 'none';
+                }
+            }
+        };
+
+        submitBtn.addEventListener('click', getInfo);
+    </script>
+</script>
+</body>
+
+</html>
