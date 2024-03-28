@@ -207,6 +207,10 @@ button[type="submit"] {
         const dayElement = document.getElementById("day");
         const dateElement = document.getElementById("today_date");
 
+        const kelvinToCelsius = (kelvin) => {
+            return (kelvin - 273.15).toFixed(2); // Convert Kelvin to Celsius and round to 2 decimal places
+        };
+
         const getInfo = async (event) => {
             event.preventDefault();
             let cityval = cityName.value;
@@ -222,7 +226,8 @@ button[type="submit"] {
                     const data = await response.json();
                     const arrdata = [data];
                     city_name.innerText = `${arrdata[0].name}, ${arrdata[0].sys.country}`;
-                    temp.innerHTML = `<p><span>${arrdata[0].main.temp} </span><sup>o</sup>C</p>`;
+                    const celsiusTemp = kelvinToCelsius(arrdata[0].main.temp);
+                    temp.innerHTML = `<p><span>${celsiusTemp} </span><sup>o</sup>C</p>`;
                     temp_status.innerText = arrdata[0].weather[0].main;
 
                     // Update day and date
@@ -248,7 +253,6 @@ button[type="submit"] {
         };
 
         submitBtn.addEventListener('click', getInfo);
-    </script>
 </script>
 </body>
 
