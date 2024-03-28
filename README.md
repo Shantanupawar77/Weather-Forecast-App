@@ -34,5 +34,7 @@ npm install
 - HTML
 - CSS
 - JavaScript
+### Demo 
+ The application is hosted at https://weather-forecast-app-bzr1.onrender.com
 ### Author
 Shantanu Pawar
