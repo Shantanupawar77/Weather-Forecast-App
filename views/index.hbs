@@ -217,7 +217,7 @@ button[type="submit"] {
                 temp_status.style.display = 'none';
             } else {
                 try {
-                    let url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName.value}&appid={api_key}`;
+                    let url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName.value}&appid=975c8d701e901d07eeec85d4f62f318b`;
                     const response = await fetch(url);
                     const data = await response.json();
                     const arrdata = [data];
